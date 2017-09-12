@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>iscroll 复习</title>
+		<script src="../js/zepto.js"></script>
+		<script src="../js/iscroll-probe.js"></script>
+		<style>
+			*{
+				margin:0; padding:0;
+				list-style: none;
+			}
+			
+			html{
+				font-size:62.5%;
+			}
+			
+			html,body,#box{
+				height:100%;
+			}
+			
+			#box{
+				height:100%;
+				display: flex;
+				flex-direction:column;
+			}
+			
+			#main{
+				flex-grow: 1;
+				overflow: hidden;
+				background:#E3D2D2;
+			}
+			
+			#main li{
+				height:4rem;
+				border-bottom:1px dashed #003366;
+				text-align: center;
+				line-height: 4rem;
+				background:white;
+			}
+			
+			#main p{
+				height:5rem;
+				line-height: 5rem;
+				text-align: center;
+				display:none;
+			}
+			
+			header,footer{
+				height:5rem;
+				line-height:5rem;
+				text-align: center;
+				background:darkseagreen;
+			}
+			
+		</style>
+	
+	</head>
+	<body>
+		<!--1，用iscroll 做一个布局 有头部、主体、页脚
+		2，实现下拉加载，判断高度为100-->
+		
+		<div id="box">
+			<header>
+				送情郎
+			</header>
+			
+			<div id="main">
+				<ul>
+					<p>下拉刷新..</p>
+					<li>小妹妹送我滴郎呀</li>
+					<li>小妹妹送我滴郎呀</li>
+					<li>小妹妹送我滴郎呀</li>
+					<li>小妹妹送我滴郎呀</li>
+					<li>小妹妹送我滴郎呀</li>
+					<li>小妹妹送我滴郎呀</li>
+					<li>小妹妹送我滴郎呀</li>
+					<li>小妹妹送我滴郎呀</li>
+					<li>小妹妹送我滴郎呀</li>
+					<li>小妹妹送我滴郎呀</li>
+					<li>小妹妹送我滴郎呀</li>
+					<li>小妹妹送我滴郎呀</li>
+					<li>小妹妹送我滴郎呀</li>
+					<li>小妹妹送我滴郎呀</li>
+					<li>小妹妹送我滴郎呀</li>
+					<li>小妹妹送我滴郎呀</li>
+					<li>小妹妹送我滴郎呀</li>
+					<li>小妹妹送我滴郎呀</li>
+					<li>小妹妹送我滴郎呀</li>
+					<li>小妹妹送我滴郎呀</li>
+					<li>小妹妹送我滴郎呀</li>
+					<li>小妹妹送我滴郎呀</li>
+					<li>小妹妹送我滴郎呀</li>
+					<li>小妹妹送我滴郎呀</li>
+					<li>小妹妹送我滴郎呀</li>
+					<li>小妹妹送我滴郎呀</li>
+					<li>小妹妹送我滴郎呀</li>
+				</ul>
+			</div>
+			
+			<footer>
+				送到了大门北呀
+			</footer>
+			
+		</div>
+	
+	
+<script>
+	var Is;
+	function loaded(){
+		setTimeout(function(){
+			Is=new IScroll("#main",{
+				snap:'li',
+				probeType:3
+			})
+			
+			//滚动中触发
+			var num=false;
+			Is.on('scroll',function(){
+				if(this.y>100){
+					 
+					$('p').show()
+					num=true
+				}
+			})
+			
+			//滚动结束事件----必须写在函数里
+			Is.on('scrollEnd',function(){
+				if(num==true){
+					$('p').html('正在加载请稍候...')
+					
+					setTimeout(function(){
+						$('p').after('<li>情郎哥地兜兜扒了包了镀金钩啊</li>')
+						$('p').hide();
+						$('p').html('下拉刷新..')
+					
+						$.ajax({
+							type:"get",
+							url:"http://127.0.0.1:8585",
+							async:true,success:function(data){
+								var obj = JSON.parse(data)
+								
+								console.log(obj)
+							}
+							
+							
+						});
+						
+						
+					},1000)
+					
+					//初始化num
+					num=false;
+				}
+				
+			})
+			
+		},200)	
+	}
+	
+	
+	
+	
+	
+	window.onload=function(){
+		loaded()
+	}
+	
+</script>
+		
+	</body>
+</html>
